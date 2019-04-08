@@ -1,3 +1,7 @@
+v2.0.2
+======
+* Added google recapcha
+
 v2.0.1
 ======
 * Fix permission issue

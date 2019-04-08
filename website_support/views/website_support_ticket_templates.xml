@@ -361,6 +361,9 @@ label > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
 </template>
 
 <template id="support_ticket_view" name="Support Ticket" page="True">
+    <xpath expr="/t" position="inside">
+        <script type="text/javascript" src="https://www.google.com/recaptcha/api.js" async="" defer=""></script>
+    </xpath>
     <t t-call="website.layout">
         <div class="container mt16 mb16">
 
@@ -408,22 +411,64 @@ label > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
                     </t>
                 </table>
                 <t t-if="portal_access_key">
-                    <form method="GET" t-attf-action="/support/portal/ticket/comment">
+                    <form id="add_comment_form" method="GET" t-attf-action="/support/portal/ticket/comment">
+                        <script>
+                            $(document).ready(function() {
+                            $('#add_comment_form').submit(function() {
+                            return recaptchaVerified_comment;
+                            });
+
+                            });
+                            var recaptchaVerified_comment = false;
+                            function verifyCallback_comment(response) {
+                            if (response !== null) {
+                            recaptchaVerified_comment = true;
+                            }
+                            }
+
+                        </script>
                         <b>Add Comment</b><br/>
                         <textarea  class="form-control" name="comment" style="min-height: 120px" required="True"></textarea>
                         <br/>
                     
                         <input type="hidden" name="portal_access_key" t-attf-value="#{portal_access_key}"/>
+                        <div class="form-group form-field o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="g-recaptcha-response">Human?</label>
+                            <div class="col-md-7 col-sm-8">
+                                <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" data-callback="verifyCallback_comment"></div>
+                            </div>
+                        </div>
                         <button class="btn btn-primary btn-lg">Submit</button>
 		    </form>
 		</t>
                 <t t-if="not portal_access_key">
-                    <form method="GET" t-attf-action="/support/ticket/comment">
+                    <form id='add_comment_form_user' method="GET" t-attf-action="/support/ticket/comment">
+                        <script>
+                            $(document).ready(function() {
+                            $('#add_comment_form_user').submit(function() {
+                            return recaptchaVerified_comment;
+                            });
+
+                            });
+                            var recaptchaVerified_comment = false;
+                            function verifyCallback_comment(response) {
+                            if (response !== null) {
+                            recaptchaVerified_comment = true;
+                            }
+                            }
+
+                        </script>
                         <b>Add Comment</b><br/>
                         <textarea  class="form-control" name="comment" style="min-height: 120px" required="True"></textarea>
                         <br/>
                     
                         <input type="hidden" name="ticket_id" t-attf-value="#{support_ticket.id}"/>
+                        <div class="form-group form-field o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="g-recaptcha-response">Human?</label>
+                            <div class="col-md-7 col-sm-8">
+                                <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" data-callback="verifyCallback_comment"></div>
+                            </div>
+                        </div>
                         <button class="btn btn-primary btn-lg">Submit</button>
 		   </form>
                 
@@ -605,6 +650,10 @@ $(document).ready(function() {
 <template id="support_submit_ticket" name="Submit Support Ticket" page="True">
     <t t-call="website.layout">
 
+    <xpath expr="/t" position="inside">
+        <script type="text/javascript" src="https://www.google.com/recaptcha/api.js" async="" defer=""></script>
+    </xpath>
+
       <div id="wrap" class="oe_structure oe_empty">
       <section>
         <div class="container">
@@ -616,7 +665,7 @@ $(document).ready(function() {
         </div>
       </section>
 
-        <form action="/support/ticket/process" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+        <form id="create_ticket_form" action="/support/ticket/process" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 	    <input style="display:none;" name="my_gold" value="256"/>
             <div t-attf-class="form-group #{error and 'person_name' in error and 'has-error' or ''}">
@@ -674,7 +723,18 @@ $(document).ready(function() {
                    
                });
 
-            });
+               $('#create_ticket_form').submit(function() {
+               return recaptchaVerified;
+               });
+
+               });
+
+               var recaptchaVerified = false;
+               function verifyCallback(response) {
+               if (response !== null) {
+               recaptchaVerified = true;
+               }
+               }
 
 
 
@@ -715,7 +775,12 @@ $(document).ready(function() {
                     <textarea  class="form-control" name="description" style="min-height: 120px" required="True"></textarea>
                 </div>
             </div>
-
+            <div class="form-group form-field o_website_form_required_custom">
+                <label class="col-md-3 col-sm-4 control-label" for="g-recaptcha-response">Human?</label>
+                <div class="col-md-7 col-sm-8">
+                    <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" data-callback="verifyCallback"></div>
+                </div>
+            </div>
             <div class="form-group">
                 <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
                     <button class="btn btn-primary btn-lg">Submit Ticket</button>
